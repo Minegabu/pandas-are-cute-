@@ -27,7 +27,6 @@ def home():
 @app.route('/ingamename',methods=["get","POST"])
 def data():
     print(request.form["ingamename"])
-    print ("Gabriel's Gay")
     return render_template("contents.html")
 
 if __name__ == "__main__":

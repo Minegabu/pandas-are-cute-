@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles1.css">
     <title>Data</title>
 </head>
 <body>
+  <header>IGN:</header>
+  <div id="container">
     <table>
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Image</th>
-          <th>Delete</th>
+        <tr style='background-color: red;'>
+          <th>Purse</th>
+          <th>Bank</th>
+          <th>Skill Average</th>
         </tr>
           {% for item in results %}
         <tr>
@@ -23,5 +25,6 @@
         </tr>
         {%endfor%}
       </table>
+    </div>
 </body>
 </html>
