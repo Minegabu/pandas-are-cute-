@@ -79,9 +79,9 @@ input, button
     width: 550px;
     padding: 35px;
     margin: -83px auto 0 auto;
-    background-color: #ff7575;
+    background-color: rgb(255, 0, 0);
     border-radius: 20px;
-    box-shadow: 0 10px 40px #ff7c7c, 0 0 0 20px #ffffffeb;
+    box-shadow: 0 10px 40px #ed7c7c, 0 0 0 20px #ffffffeb;
     transform: scale(0.6);
 }
 
@@ -97,10 +97,10 @@ input[type="text"]
     font-size: 60px;
     line-height: 1;
 }
-
+s
 input[type="text"]::placeholder
 {
-    color: #e16868;
+    color: transparent;   
 }
 
 #s-cover

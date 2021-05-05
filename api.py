@@ -6,6 +6,23 @@ import sqlite3
 app = Flask(__name__)
 form = cgi.FieldStorage()
 searchterm =  form.getvalue('searchbox')
+DATABASE = "Pandas-are-cute.db"
+key = "4e67ce31-eac7-4daf-b7f7-390d7bf699b0"
+
+
+
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+
+
+
+def decimal_str(x: float, decimals: int = 10) -> str:
+    return format(x, f".{decimals}f").lstrip().rstrip('0')
 
 def getting_stats():
     while 1:
@@ -26,8 +43,19 @@ def home():
 
 @app.route('/ingamename',methods=["get","POST"])
 def data():
-    print(request.form["ingamename"])
-    return render_template("contents.html")
+    if request.method == "POST":
+        cursor = get_db().cursor()
+        uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/lilycraft132").json()
+        profiles1 = requests.get("https://api.hypixel.net/player?key=9d49337e-bf1c-4825-84e4-71c529e778a3&uuid="+uuid["id"]).json()
+        profliedata = list(profiles1["player"]["stats"]["SkyBlock"]["profiles"].keys())[0]
+        data = requests.get("https://api.hypixel.net/skyblock/profile?key=9d49337e-bf1c-4825-84e4-71c529e778a3&profile="+profliedata).json()
+        purse = data["profile"]["members"]["f95ceea60a084921a25b22bc726fafaa"]["coin_purse"]
+        bank = data["profile"]["banking"]["balance"]
+        sql = "INSERT INTO data (Purse,Bank) VALUES(?,?)"
+        cursor.execute(sql,(purse,bank))
+        print(request.form["ingamename"])
+        get_db().commit()
+        return render_template("contents.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
