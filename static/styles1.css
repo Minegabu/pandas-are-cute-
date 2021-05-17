@@ -2,7 +2,8 @@ table {
     font-family: "Comic Sans MS", "Comic Sans";
     border-collapse: collapse;
     width: 100%;
-    color:#dddddd;
+    color:red;
+    
   }
   
   td, th {
@@ -12,7 +13,7 @@ table {
   }
   
   tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: #dddddd; 
   }
 
 
