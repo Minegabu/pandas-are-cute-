@@ -41,13 +41,13 @@ def add():
         data = requests.get("https://api.hypixel.net/skyblock/profile?key="+ key + "&profile="+profliedata).json()
         purse = data["profile"]["members"][uuid["id"]]["coin_purse"]
         bank = data["profile"]["banking"]["balance"] 
+        sql_3 = "DELETE FROM data WHERE UUID='" + uuid["id"] +"'"
         sql_2 = "INSERT INTO data (Purse,Bank,UUID) VALUES(?,?,?)"
+        cursor.execute(sql_3)
         cursor.execute(sql_2,(purse,bank,uuid["id"]))
         get_db().commit()
         sql = "SELECT * FROM data WHERE UUID='" + uuid["id"] + "'"
         cursor.execute(sql)
-        print(sql)
-        print(sql)
         results = cursor.fetchall()
         return render_template("contents.html",results=results)
 
