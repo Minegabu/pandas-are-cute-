@@ -9,14 +9,13 @@ searchterm =  form.getvalue('searchbox')
 DATABASE = "Pandas-are-cute.db"
 key = "e84267a6-e22c-4f9d-8e5d-7e162e6dc79b"
 
-
-
-
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
     return db
+
+
 
 
 
@@ -33,26 +32,27 @@ def home():
 @app.route('/data',methods=["get","POST"])
 def add():
     if request.method == "POST":
-        print(request.form.get("yess"))
+        ign = request.form.get("yess")
+        uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+ign).json()
+        print(uuid["id"])
         cursor = get_db().cursor()
-        uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+request.form.get("yess")).json()
         profiles1 = requests.get("https://api.hypixel.net/player?key=" + key + "&uuid="+uuid["id"]).json()
         profliedata = list(profiles1["player"]["stats"]["SkyBlock"]["profiles"].keys())[0]
         data = requests.get("https://api.hypixel.net/skyblock/profile?key="+ key + "&profile="+profliedata).json()
         purse = data["profile"]["members"][uuid["id"]]["coin_purse"]
-        bank = data["profile"]["banking"]["balance"]
-        sql = "INSERT INTO data (Purse,Bank,UUID) VALUES(?,?,?)"
-        cursor.execute(sql,(purse,bank,uuid["id"]))
+        bank = data["profile"]["banking"]["balance"] 
+        sql_2 = "INSERT INTO data (Purse,Bank,UUID) VALUES(?,?,?)"
+        cursor.execute(sql_2,(purse,bank,uuid["id"]))
         get_db().commit()
-        return redirect('/contents') 
+        sql = "SELECT * FROM data WHERE UUID='" + uuid["id"] + "'"
+        cursor.execute(sql)
+        print(sql)
+        print(sql)
+        results = cursor.fetchall()
+        return render_template("contents.html",results=results)
 
-@app.route('/contents',methods=["get"])
-def data():
-    cursor = get_db().cursor()
-    sql = "SELECT max(Purse), max(Bank) FROM data"
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    return render_template("contents.html",results=results)
+
+
 
  
 
