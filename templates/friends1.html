@@ -9,7 +9,7 @@
     <div id = "nav" class="topnav" style= "position: relative; top:0px">
       <a href="pursedata">Purse and Bank</a>
       <a href="skilldata">Skills</a>
-      <a href="addfriends">Friends</a>
+      <a href="addfriends">Add Friends</a>
       <a href="displayfriends">Show Friends</a>
       <a href="/">Go Back</a>
   </div>
@@ -17,18 +17,36 @@
 <body> 
   <!-- <div id="player_model"><canvas width="400" height="800" style="width: 200px; height: 400px;" style="background-image: url({{skin}});"></canvas></div> -->
   <!-- <div style = "position: relative; top:40px;">  -->
-  <h1>Stats for {{ name }} on {{ profile }} </h1>
+  <h1>Stats of Friends for {{ name }} on {{ profile }} </h1>
   </div>
   <div id="container" style= "position: relative; right: 10px;">
     <table>
         <tr>
+          <th>IGN</th>
           <th>Purse</th>
           <th>Bank</th>
+          <th>Farming</th>
+          <th>Taming</th>
+          <th>Mining</th>
+          <th>Enchanting</th>
+          <th>Combat</th>
+          <th>Fishing</th>
+          <th>Foraging</th>
+          <th>Alchemy</th>
         </tr>
           {% for item in results %}
         <tr>
           <td>{{ item[0] }}</td>
           <td>{{ item[1] }}</td>
+          <td>{{ item[2] }}</td>
+          <td>{{ item[3] }}</td>
+          <td>{{ item[4] }}</td>
+          <td>{{ item[5] }}</td>
+          <td>{{ item[6] }}</td>
+          <td>{{ item[7] }}</td>
+          <td>{{ item[8] }}</td>
+          <td>{{ item[9] }}</td>
+          <td>{{ item[10] }}</td>
         </tr>
         {%endfor%}
       </table>
