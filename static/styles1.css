@@ -25,6 +25,7 @@ table {
     font-style: bold;
     color: white;
     text-align: center;
+    background-color: black;
   }
 
 #nav{
@@ -54,6 +55,8 @@ table {
     display: block;
     line-height: 0;
     color: white;
+    position: absolute;
+    z-index: 0;
     
 }
 
@@ -79,4 +82,9 @@ html, h1{
 
 html,h1{
 
+}
+
+#button123{
+  position: absolute;
+  z-index: 100;
 }

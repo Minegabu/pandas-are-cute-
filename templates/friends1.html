@@ -11,7 +11,7 @@
       <a href="skilldata">Skills</a>
       <a href="addfriends">Add Friends</a>
       <a href="displayfriends">Show Friends</a>
-      <a href="/">Go Back</a>
+      <a href="/">Log Out</a>
   </div>
 </head>
 <body> 
@@ -19,12 +19,15 @@
   <!-- <div style = "position: relative; top:40px;">  -->
   <h1>Stats of Friends for {{ name }} on {{ profile }} </h1>
   </div>
+  <div id="button123" style = "position: relative; top: 300px;">
+    <button> <a href="/button">sort</a></button>
+  </div>
   <div id="container" style= "position: relative; right: 10px;">
     <table>
         <tr>
           <th>IGN</th>
-          <th>Purse</th>
           <th>Bank</th>
+          <th>Purse</th>
           <th>Farming</th>
           <th>Taming</th>
           <th>Mining</th>
@@ -51,5 +54,18 @@
         {%endfor%}
       </table>
     </div>
+    <h2>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          {{ message }}
+              {% endfor %}
+        </ul>
+      </h2>
+      {% endif %}
+
+      {% endwith %}
+      {% block body %}{% endblock %}
 </body>
 </html>
