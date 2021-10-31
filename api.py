@@ -18,7 +18,7 @@ searchterm = form.getvalue('searchbox')
 # database
 DATABASE = "Pandas-are-cute.db"
 # api key
-key = "e84267a6-e22c-4f9d-8e5d-7e162e6dc79b"
+key = "a98a685a-9633-421e-8c4b-ae129568f494"
 app.secret_key = b'_5# y2L"F4Q8z\n\xec]/'
 global click_num
 click_num = 1
@@ -28,18 +28,19 @@ global order_of_sort
 order_of_sort = "ASC"
 
 
+
 # connect the database
 def get_db():
     db = getattr(g,  '_database',  None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
     return db
- 
+
 
 # turn the numbers into readable numbers that people can understand
 def millify(n):
     n = float(n)
-    millidx = max(0, min(len(millnames)-1, 
+    millidx = max(0, min(len(millnames)-1,
                         int(math.floor(0 if n == 0 else math.log10(abs(n))/3))))
     return '{:.0f}{}'.format(n / 10**(3 * millidx),  millnames[millidx])
 
@@ -57,48 +58,85 @@ def friendadd():
 
 
 # function to get the skill xp and turn it into level and percent to next level
-def compute(skillxp):
+def compute(skill):
+    global uuidglobal
+    skillname = "experience_skill_" + skill
+    profiles2 = requests.get("https://api.hypixel.net/skyblock/profiles?key="+key+"&uuid="+uuidglobal).json()
     try:
-        # get the skill data 
+        skilltotal = profiles2["profiles"][-1]["members"][uuidglobal][skillname]
+    except:
+        skilltotal = 23212
+    try:
+        # get the skill data
         skills = requests.get("https://api.hypixel.net/resources/skyblock/skills").json()
         # turn it into the right list of dictonarys
         levels = skills["collections"]["FARMING"]["levels"]
         # sort through the list of dictonarys
-        sorted = [item for item in levels if item["totalExpRequired"] < skillxp] 
+        sorted = [item for item in levels if item["totalExpRequired"] < skilltotal]
         # get the level
         max = sorted[-1]["level"]
         # get the exp to next level
         exptonextlevel = sorted[-1]['totalExpRequired']-sorted[max-2]["totalExpRequired"]
         # get the amount of exp already to next level
-        exptotalnextlevel = skillxp-sorted[max-1]["totalExpRequired"]
+        exptotalnextlevel = skilltotal-sorted[max-1]["totalExpRequired"]
         # percent to next level
         nextlevel = exptotalnextlevel/exptonextlevel
-        # if you are over the level cap 
+        # if you are over the level cap
         if nextlevel > 1:
             nextlevel = 0
         return(round(nextlevel+max, 2))
     except:
         # if you are over 50 on a skill that caps out at 50
-        sorted = [item for item in levels if item["totalExpRequired"] > skillxp] 
+        sorted = [item for item in levels if item["totalExpRequired"] > skilltotal]
         max = sorted[-1]["level"]
         return(max)
 
+def f_compute(skill):
+    global f_uuid
+    frienduuid = f_uuid ["id"]
+    skillname1 = "experience_skill_" + skill
+    profiles3 = requests.get("https://api.hypixel.net/skyblock/profiles?key="+key+"&uuid="+frienduuid).json()
+    try:
+        skilltotal = profiles3["profiles"][-1]["members"][frienduuid][skillname1]
+    except:
+        skilltotal = 23132
+    try:
+        # get the skill data
+        skills = requests.get("https://api.hypixel.net/resources/skyblock/skills").json()
+        # turn it into the right list of dictonarys
+        levels = skills["collections"]["FARMING"]["levels"]
+        # sort through the list of dictonarys
+        sorted = [item for item in levels if item["totalExpRequired"] < skilltotal]
+        # get the level
+        max = sorted[-1]["level"]
+        # get the exp to next level
+        exptonextlevel = sorted[-1]['totalExpRequired']-sorted[max-2]["totalExpRequired"]
+        # get the amount of exp already to next level
+        exptotalnextlevel = skilltotal-sorted[max-1]["totalExpRequired"]
+        # percent to next level
+        nextlevel = exptotalnextlevel/exptonextlevel
+        # if you are over the level cap
+        if nextlevel > 1:
+            nextlevel = 0
+        return(round(nextlevel+max, 2))
+    except:
+        # if you are over 50 on a skill that caps out at 50
+        sorted = [item for item in levels if item["totalExpRequired"] > skilltotal]
+        max = sorted[-1]["level"]
+        return(max)
 
 # adding all the data for the player
 @app.route('/pursedata', methods=["get", "POST"])
 def add():
     if request.method == "POST":
-        global ign
-        ign = request.form.get("yess")
-        # getting their ingamename
+        #get the username
         try:
-            global uuid
+            global ign
+            ign = request.form.get("yess")
             uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+ign).json()
-            ign1 = request.form.get("yess")
         except:
-            flash("Player does not exist")
+            flash("This username does not exist")
             return redirect('/')
-
         # getting their user id
         global uuidglobal
         uuidglobal = uuid["id"]
@@ -112,7 +150,6 @@ def add():
             cutename = profiles1["player"]["stats"]["SkyBlock"]["profiles"][profliedata]["cute_name"]
             # getting all the relevant data
             data = requests.get("https://api.hypixel.net/skyblock/profile?key="+ key + "&profile="+profliedata).json()
-            profiles2 = requests.get("https://api.hypixel.net/skyblock/profiles?key="+key+"&uuid="+uuid["id"]).json()
             purse = millify(round(data["profile"]["members"][uuid["id"]]["coin_purse"]))
         except:
             flash("Player has not played skyblock")
@@ -122,45 +159,15 @@ def add():
         except:
             flash("Banking api off")
             return redirect('/')
-        # finding the total skill xp
-        farmingtotal =  profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_farming"]
-        try:
-            miningtotal = profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_mining"]
-        except:
-            miningtotal = 100
-        try:
-            enchantingtotal = profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_enchanting"]
-        except:
-            enchantingtotal = 100
-        try:
-            alchemytotal = profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_alchemy"]
-        except:
-            alchemytotal = 100
-        try:
-            combattotal = profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_combat"]
-        except:
-            combattotal = 100
-        try:
-            tamingtotal = profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_taming"]
-        except:
-            tamingtotal = 100
-        try:
-            fishingtotal = profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_fishing"]
-        except:
-            fishingtotal = 100
-        try:
-            foragingtotal = profiles2["profiles"][-1]["members"][uuid["id"]]["experience_skill_foraging"]
-        except:
-            foragingtotal = 100
         # converting it into level
-        mininglevel = compute(miningtotal)
-        enchantinglevel = compute(enchantingtotal)
-        alchemylevel = compute(alchemytotal)
-        combatlevel = compute(combattotal)
-        taminglevel = compute(tamingtotal)
-        fishinglevel = compute(fishingtotal)
-        foraginglevel = compute(foragingtotal)
-        farminglevel = compute(farmingtotal)
+        mininglevel = compute("mining")
+        enchantinglevel = compute("enchanting")
+        alchemylevel = compute("alchemy")
+        combatlevel = compute("combat")
+        taminglevel = compute("taming")
+        fishinglevel = compute("fishing")
+        foraginglevel = compute("foraging")
+        farminglevel = compute("farming")
         if alchemylevel > 50:
             alchemylevel = 50
         if taminglevel > 50:
@@ -207,27 +214,6 @@ def add():
         return render_template("contents.html", results=results, name=ign, profile=cutename)
 
 
-@app.route('/button')
-def button():
-    # way to sort the friends list 
-    global order
-    global click_num
-    global order_of_sort
-    click_num = click_num + 1
-    if click_num == 2:
-        order = "purse"
-        flash("Sorted by purse")
-        order_of_sort = "DESC"
-    elif click_num == 3:
-        order = "bank"
-        flash("Sorted by bank")
-    else:
-        click_num = 0
-        order = "name" 
-        order_of_sort = "ASC"
-    return redirect('/displayfriends')
-
-
 @app.route('/skilldata', methods=["get", "POST"])
 def skill():
     # displaying the skill data 
@@ -235,7 +221,7 @@ def skill():
     cursor = get_db().cursor()
     sql = "SELECT * FROM data WHERE UUID='" + uuidglobal + "'"
     cursor.execute(sql)
-    results = cursor.fetchall()
+    results =  cursor.fetchall()
     return render_template("contents1.html", name=ign, results=results, profile=cutename)
 
 
@@ -245,10 +231,14 @@ def friend():
     if request.method == "POST":
         friend = str(request.form.get("ign1"))
         try:
-            
             # getting the username
             # getting the friends user id
-            f_uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+friend).json()
+            try:    
+                global f_uuid
+                f_uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+friend).json()
+            except:
+                flash("This user does not exist")
+                return redirect('/addfriends')
             try:
                 profiles1 = requests.get("https://api.hypixel.net/player?key=" + key + "&uuid="+f_uuid["id"]).json()
             except:
@@ -257,50 +247,16 @@ def friend():
             # getting all the relevant data
             f_profliedata = list(profiles1["player"]["stats"]["SkyBlock"]["profiles"].keys())[-1]
             f_data = requests.get("https://api.hypixel.net/skyblock/profile?key="+ key + "&profile="+f_profliedata).json()
-            f_profiles2 = requests.get("https://api.hypixel.net/skyblock/profiles?key="+key+"&uuid="+f_uuid["id"]).json()
             f_purse = millify(round(f_data["profile"]["members"][f_uuid["id"]]["coin_purse"]))
             f_bank = millify(round(f_data["profile"]["banking"]["balance"]))
-            try:
-                f_miningtotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_mining"]
-            except:
-                f_miningtotal = 100
-            try:
-                f_enchantingtotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_enchanting"]
-            except:
-                f_enchantingtotal = 100
-            try:
-                f_alchemytotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_alchemy"]
-            except:
-                f_alchemytotal = 100
-            try:
-                f_combattotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_combat"]
-            except:
-                f_combattotal = 100 
-            try:
-                f_tamingtotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_taming"]
-            except:
-                f_tamingtotal = 100
-            try:
-                f_fishingtotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_fishing"]
-            except:
-                f_fishingtotal = 100
-            try:
-                f_foragingtotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_foraging"]
-            except:
-                f_foragingtotal = 100 
-            try:
-                f_farmingtotal = f_profiles2["profiles"][-1]["members"][f_uuid["id"]]["experience_skill_farming"]
-            except:
-                f_farmingtotal = 100
-            f_mininglevel = compute(f_miningtotal)
-            f_enchantinglevel = compute(f_enchantingtotal)
-            f_alchemylevel = compute(f_alchemytotal)
-            f_combatlevel = compute(f_combattotal)
-            f_taminglevel = compute(f_tamingtotal)
-            f_fishinglevel = compute(f_fishingtotal)
-            f_foraginglevel = compute(f_foragingtotal)
-            f_farminglevel = compute(f_farmingtotal) 
-
+            f_mininglevel = f_compute("mining")
+            f_enchantinglevel = f_compute("enchanting")
+            f_alchemylevel = f_compute("alchemy")
+            f_combatlevel = f_compute("combat")
+            f_taminglevel = f_compute("taming")
+            f_fishinglevel = f_compute("fishing")
+            f_foraginglevel = f_compute("foraging")
+            f_farminglevel = f_compute("farming") 
             cursor = get_db().cursor()
             sql = "SELECT id FROM data WHERE uuid='" +f_uuid["id"]+ "'"
             cursor.execute(sql)
@@ -323,15 +279,12 @@ def friend():
                 cursor.execute("""UPDATE data SET fishing=? WHERE uuid=?""", (f_fishinglevel, f_uuid["id"]))
                 cursor.execute("""UPDATE data SET foraging=? WHERE uuid=?""", (f_foraginglevel, f_uuid["id"]))
                 cursor.execute("""UPDATE data SET alchemy=? WHERE uuid=?""", (f_alchemylevel, f_uuid["id"]))
-
             sql2 = "SELECT id FROM data WHERE uuid='" +uuidglobal+ "'"
             cursor.execute(sql2)
             u_id = str(cursor.fetchone())
             u_id = re.sub('[^0-9]',  '',  u_id)
-            sql1 = "SELECT user_id FROM friends WHERE user_id='"+u_id+"'"+" AND friend_id = '"+f_id+"'"
             # inserting friend
             cursor.execute("INSERT INTO friends (id, friend_id) VALUES (?, ?)", (u_id, f_id))
-
             get_db().commit()
 
             return redirect('/displayfriends') 
@@ -343,7 +296,6 @@ def friend():
 def friends():
             try:
                 # get friends
-                friend = str(request.form.get("ign1"))
                 cursor = get_db().cursor()
                 # finding the id 
                 sql = "SELECT id FROM data WHERE uuid='" + uuidglobal + "'"
