@@ -5,8 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles1.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <title>Data</title>
     <div id = "nav" class="topnav" style= "position: relative; top:0px">
+      <b>{{ name }} on {{ profile }}</b>
       <a href="pursedata">Purse and Bank</a>
       <a href="skilldata">Skills</a>
       <a href="addfriends">Add Friends</a>
@@ -17,12 +19,8 @@
 <body> 
   <!-- <div id="player_model"><canvas width="400" height="800" style="width: 200px; height: 400px;" style="background-image: url({{skin}});"></canvas></div> -->
   <!-- <div style = "position: relative; top:40px;">  -->
-  <h1>Stats of Friends for {{ name }} on {{ profile }} </h1>
   </div>
-  <div id="button123" style = "position: relative; top: 300px;">
-    <button> <a href="/button">sort</a></button>
-  </div>
-  <div id="container" style= "position: relative; right: 10px;">
+  <div id="container" style= "position: fixed; right: 40px;">
     <table>
         <tr>
           <th>IGN</th>

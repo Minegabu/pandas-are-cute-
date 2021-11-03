@@ -5,8 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles1.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <title>Data</title>
     <div id = "nav" class="topnav" style= "position: relative; top:0px">
+      <b>{{ name}} on {{ profile }}</b>
       <a href="pursedata">Purse and Bank</a>
       <a href="skilldata">Skills</a>
       <a href="addfriends">Add Friends</a>
@@ -15,23 +17,20 @@
   </div>
 </head>
 <body> 
-  <!-- <div id="player_model"><canvas width="400" height="800" style="width: 200px; height: 400px;" style="background-image: url({{skin}});"></canvas></div> -->
-  <!-- <div style = "position: relative; top:40px;">  -->
-  <h1>Stats for {{ name }} on {{ profile }} </h1>
-  </div>
-  <div id="container" style= "position: relative; right: 10px;">
+  <div id = "backgroundimage"></div>
+  <main style= "position: fixed; right: 4.05rem; top: 1.9rem;">
     <table>
+      {% for item in results %}
         <tr>
-          <th>Purse</th>
-          <th>Bank</th>
-        </tr>
-          {% for item in results %}
-        <tr>
-          <td>{{ item[0] }}</td>
-          <td>{{ item[1] }}</td>
-        </tr>
+          <th>Purse</th><td>{{ item[0] }}</td></tr>
+        <tr><th>Bank</th><td>{{ item[1] }}</td></tr>
         {%endfor%}
       </table>
+    <div id = rectangle style = "width:21rem;height:20.5rem;border:1px solid #000; position: fixed; right:9.5rem; top:0.9rem;"></div>
+    <div id = rectangle1 style = "width:16rem;height:16rem;border:1px solid #000; position: fixed; right:12rem; top:3.03622050220101rem;"></div>
+    <div id = "yes" style = "position: fixed; right: 15rem; top: 5.5rem;"><img src= {{skin}}></div>
+
+    </div>
     </div>
 </body>
 </html>

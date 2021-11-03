@@ -5,8 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles1.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <title>Skills</title>
     <div id = "nav" class="topnav" style = "position: relative; top: 0px;">
+        <b>{{ name }} on {{ profile }}</b>
         <a href="pursedata">Purse and Bank</a>
         <a href="skilldata">Skills</a>
         <a href="addfriends">Add Friends</a>
@@ -15,35 +17,25 @@
   </div>
 </head>
 <body> 
-<div style = "position: relative;top: 0px;">
-  <h1>Stats for {{ name }} on {{ profile }} </h1>
-</div>
-  <div id="container" style = "position: relative; right: 10px;">
-    
+  <main style= "position: fixed; right: 4.05rem; top: 1.9rem;"> 
     <table>
         <tr>
-            <th>Farming</th>
-            <th>Taming</th>
-            <th>Mining</th>
-            <th>Enchanting</th>
-            <th>Combat</th>
-            <th>Fishing</th>
-            <th>Foraging</th>
-            <th>Alchemy</th>
-          </tr>
             {% for item in results %}
-          <tr>
-            <td>{{ item[4] }}</td>
-            <td>{{ item[5] }}</td>
-            <td>{{ item[6] }}</td>
-            <td>{{ item[7] }}</td>
-            <td>{{ item[8] }}</td>
-            <td>{{ item[9] }}</td>
-            <td>{{ item[10] }}</td>
-            <td>{{ item[11] }}</td>
+            <tr><th>Farming</th><td>{{ item[4] }}</td></tr>
+            <tr><th>Taming</th><td>{{ item[5] }}</td></tr>
+            <tr><th>Mining</th><td>{{ item[6] }}</td></tr>
+            <tr><th>Enchanting</th><td>{{ item[7] }}</td></tr>
+            <tr><th>Combat</th><td>{{ item[8] }}</td></tr>
+            <tr><th>Fishing</th><td>{{ item[9] }}</td></tr>
+            <tr><th>Foraging</th><td>{{ item[10] }}</td></tr>
+            <tr><th>Alchemy</th><td>{{ item[11] }}</td></tr>
         </tr>
         {%endfor%}
       </table>
-    </div>
+      <div id = rectangle style = "width:21rem;height:20.5rem;border:1px solid #000; position: fixed; right:9.5rem; top:0.9rem;"></div>
+      <div id = rectangle1 style = "width:16rem;height:16rem;border:1px solid #000; position: fixed; right:12rem; top:3.03622050220101rem;"></div>
+      <div id = "yes" style = "position: fixed; right: 15rem; top: 5.5rem;"><img src={{skin}}>
+      </div>
+    </main>
 </body>
 </html>

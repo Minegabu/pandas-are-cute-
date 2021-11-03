@@ -3,13 +3,13 @@
 import re
 from tabulate import tabulate
 import cgi
-from flask import Flask, render_template, g, request, redirect, url_for, send_from_directory, flash
+from flask import Flask, render_template, g, request, redirect, url_for, send_from_directory, flash, session
 import requests
 import json
 import sqlite3
 import math
-
-
+import base64
+import urllib
 # for making it easy to read
 millnames = ['', ' K', ' M', ' B', ' T']
 app = Flask(__name__)
@@ -20,15 +20,14 @@ DATABASE = "Pandas-are-cute.db"
 # api key
 key = "a98a685a-9633-421e-8c4b-ae129568f494"
 app.secret_key = b'_5# y2L"F4Q8z\n\xec]/'
-global click_num
-click_num = 1
-global order
-order = "name"
-global order_of_sort
-order_of_sort = "ASC"
+
+import base64
+import urllib.request
+import json
 
 
 
+ 
 # connect the database
 def get_db():
     db = getattr(g,  '_database',  None)
@@ -54,16 +53,15 @@ def home():
 # addfriends route
 @app.route('/addfriends')
 def friendadd():
-    return render_template("friends.html")
+    return render_template("friends.html", name = session['ign'], profile = session['cutename'])
 
 
 # function to get the skill xp and turn it into level and percent to next level
 def compute(skill):
-    global uuidglobal
     skillname = "experience_skill_" + skill
-    profiles2 = requests.get("https://api.hypixel.net/skyblock/profiles?key="+key+"&uuid="+uuidglobal).json()
+    profiles2 = requests.get("https://api.hypixel.net/skyblock/profiles?key="+key+"&uuid="+session['uuid']).json()
     try:
-        skilltotal = profiles2["profiles"][-1]["members"][uuidglobal][skillname]
+        skilltotal = profiles2["profiles"][-1]["members"][session['uuid']][skillname]
     except:
         skilltotal = 23212
     try:
@@ -92,8 +90,7 @@ def compute(skill):
         return(max)
 
 def f_compute(skill):
-    global f_uuid
-    frienduuid = f_uuid ["id"]
+    frienduuid = session['fuuid']
     skillname1 = "experience_skill_" + skill
     profiles3 = requests.get("https://api.hypixel.net/skyblock/profiles?key="+key+"&uuid="+frienduuid).json()
     try:
@@ -125,29 +122,38 @@ def f_compute(skill):
         max = sorted[-1]["level"]
         return(max)
 
+@app.route('/pursedata', methods=["get","POST"])
+def display():
+    cursor = get_db().cursor()
+    sql = "SELECT * FROM data WHERE UUID='" + session['uuid'] + "'"
+    cursor.execute(sql)
+    results =  cursor.fetchall()
+    return render_template("contents.html", name=session['ign'], results=results, profile=session['cutename'], skin=session['skin'])
+
 # adding all the data for the player
-@app.route('/pursedata', methods=["get", "POST"])
+@app.route('/adddata', methods=["get", "POST"])
 def add():
     if request.method == "POST":
         #get the username
         try:
-            global ign
             ign = request.form.get("yess")
+            session['ign'] = ign
             uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+ign).json()
+            session['uuid'] = uuid['id']
         except:
             flash("This username does not exist")
             return redirect('/')
         # getting their user id
-        global uuidglobal
-        uuidglobal = uuid["id"]
         cursor = get_db().cursor()
+        skin = "https://crafatar.com/avatars/"+session['uuid']
+        session['skin'] = skin
         # getting the profile data
         try:
             profiles1 = requests.get("https://api.hypixel.net/player?key=" + key + "&uuid="+uuid["id"]).json()
             profliedata = list(profiles1["player"]["stats"]["SkyBlock"]["profiles"].keys())[0]
-            global cutename
             # finding profile name
             cutename = profiles1["player"]["stats"]["SkyBlock"]["profiles"][profliedata]["cute_name"]
+            session['cutename'] = cutename
             # getting all the relevant data
             data = requests.get("https://api.hypixel.net/skyblock/profile?key="+ key + "&profile="+profliedata).json()
             purse = millify(round(data["profile"]["members"][uuid["id"]]["coin_purse"]))
@@ -157,8 +163,7 @@ def add():
         try:
             bank = millify(round(data["profile"]["banking"]["balance"]))
         except:
-            flash("Banking api off")
-            return redirect('/')
+            bank = 0
         # converting it into level
         mininglevel = compute("mining")
         enchantinglevel = compute("enchanting")
@@ -198,31 +203,17 @@ def add():
             cursor.execute("""UPDATE data SET alchemy=? WHERE uuid=?""", (alchemylevel, uuid["id"]))
             cursor.execute("""UPDATE data SET name=? WHERE uuid=?""", (ign, uuid["id"]))
         get_db().commit()
-        sql = "SELECT * FROM data WHERE UUID='" + uuid["id"] +"'"
-        cursor.execute(sql)    
-        results = cursor.fetchall()
-        return render_template("contents.html", results=results,  name=ign, profile=cutename)
-    else:
-        # when it is not post
-        uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+ign).json()
-        cursor = get_db().cursor()
-        sql = "SELECT * FROM data WHERE UUID ='" + uuid["id"] +"'"
-        sql2 = "SELECT * FROM data WHERE UUID= '" + uuid["id"] + "'"
-        cursor.execute(sql)
-        cursor.execute(sql2)
-        results = cursor.fetchall()
-        return render_template("contents.html", results=results, name=ign, profile=cutename)
+        return redirect('/pursedata')
 
 
 @app.route('/skilldata', methods=["get", "POST"])
 def skill():
     # displaying the skill data 
-    global uuidglobal
     cursor = get_db().cursor()
-    sql = "SELECT * FROM data WHERE UUID='" + uuidglobal + "'"
+    sql = "SELECT * FROM data WHERE UUID='" + session['uuid'] + "'"
     cursor.execute(sql)
     results =  cursor.fetchall()
-    return render_template("contents1.html", name=ign, results=results, profile=cutename)
+    return render_template("contents1.html", name=session['ign'], results=results, profile=session['cutename'], skin=session['skin'])
 
 
 # adding friends
@@ -234,14 +225,14 @@ def friend():
             # getting the username
             # getting the friends user id
             try:    
-                global f_uuid
                 f_uuid = requests.get("https://api.mojang.com/users/profiles/minecraft/"+friend).json()
+                session['fuuid']=f_uuid['id']
             except:
                 flash("This user does not exist")
                 return redirect('/addfriends')
             try:
                 profiles1 = requests.get("https://api.hypixel.net/player?key=" + key + "&uuid="+f_uuid["id"]).json()
-            except:
+            except: 
                 flash("Player has no profiles")
                 return render_template("friend.html")
             # getting all the relevant data
@@ -279,7 +270,7 @@ def friend():
                 cursor.execute("""UPDATE data SET fishing=? WHERE uuid=?""", (f_fishinglevel, f_uuid["id"]))
                 cursor.execute("""UPDATE data SET foraging=? WHERE uuid=?""", (f_foraginglevel, f_uuid["id"]))
                 cursor.execute("""UPDATE data SET alchemy=? WHERE uuid=?""", (f_alchemylevel, f_uuid["id"]))
-            sql2 = "SELECT id FROM data WHERE uuid='" +uuidglobal+ "'"
+            sql2 = "SELECT id FROM data WHERE uuid='" +session['uuid'] + "'"
             cursor.execute(sql2)
             u_id = str(cursor.fetchone())
             u_id = re.sub('[^0-9]',  '',  u_id)
@@ -298,7 +289,7 @@ def friends():
                 # get friends
                 cursor = get_db().cursor()
                 # finding the id 
-                sql = "SELECT id FROM data WHERE uuid='" + uuidglobal + "'"
+                sql = "SELECT id FROM data WHERE uuid='" + session['uuid'] + "'"
                 cursor.execute(sql)
                 u_id = str(cursor.fetchone())
                 u_id = re.sub('[^0-9]',  '',  u_id)
@@ -311,13 +302,13 @@ def friends():
                 allfriends = allfriends.replace(")", "")
                 allfriends = allfriends.replace("(", "")
                 allfriends = allfriends[:-1]
-                s_friend = "SELECT name, purse, bank, farming, taming, mining, enchanting, combat, fishing, foraging, alchemy FROM data WHERE id in ("+allfriends+", "+u_id+") ORDER BY "+order+" "+order_of_sort+""
+                s_friend = "SELECT name, purse, bank, farming, taming, mining, enchanting, combat, fishing, foraging, alchemy FROM data WHERE id in ("+allfriends+", "+u_id+")"
                 cursor.execute(s_friend)
                 results = cursor.fetchall()
-                return render_template("friends1.html",  results=results,  name = ign , profile =cutename, )
+                return render_template("friends1.html",  results=results,  name = session['ign'] , profile = session['cutename'],)
             except:
                 flash("You have no friends L")
-                return redirect('/skilldata')
+                return redirect('/addfriends')
 
 
 if __name__ == "__main__":
