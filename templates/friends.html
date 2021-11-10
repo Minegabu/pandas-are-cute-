@@ -6,25 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Friends</title>
 </head>
 <body>
-  <div id = "nav" class="topnav" style= "position: relative; top:0px">
-  <b>{{ name }} on {{ profile }}</b>
-  <a href="pursedata">Purse and Bank</a>
-  <a href="skilldata">Skills</a>
-  <a href="addfriends">Add Friends</a>
-  <a href="displayfriends">Show Friends</a>
-  <a href="/">Log Out</a>
+  <div id=header12 style ="position: fixed; right:24rem; top:13rem;">
+    <p>Search for players stats on Hypixel Skyblock</p></div>
+  <div id = "nav" class="w3-bar w3-border w3-black">
+    <a href="/" class="w3-bar-item w3-button w3-right">Logout</a>
+    <a href="pursedata" class="w3-bar-item w3-button w3-right ">Purse and Bank</a>
+    <a href="skilldata" class="w3-bar-item w3-button w3-right">Skills</a>
+    <a href="addfriends" class="w3-bar-item w3-button w3-right w3-brown">Add Friends</a>
+    <a href="displayfriends" class="w3-bar-item w3-button w3-right">Show Friends</a>
+    <span class="w3-bar-item w3-left">{{ name }} on {{ profile }}</span>
   </div>
+  <div id = rectangle1 style = "width:60rem;height:18rem;border:1px solid #000; position: fixed; right:15rem; top:13rem;"></div>
     <div id="container"><div>
     <div id="cover">
-        <form method="POST" action="/friends">
+        <form method="POST" action="/adddata">
           <div class="tb">
             <div class="td">
-              <input type="text" name="ign1" required placeholder="Enter Username"></div>
-            <div class="td" id="s-cover">
-              <button type="submit">
+              <input type="text" name="yess" required placeholder="Enter Username"></div>
+              <div class="td" id="s-cover">
+             <div id="button" style="position: fixed; top: 26rem; right: 42rem;"><button class ="w3-button w3-ripple w3-round-xxlarge  w3-green" onclick="myFunction()">Go</button></div>
+             <script>
+              function myFunction() {
+                document.getElementById("button").style.fontWeight = "bold";
+              }
+              </script>
                 <div id="s-circle"></div>
                 <span></span>
               </button>

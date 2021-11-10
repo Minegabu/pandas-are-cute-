@@ -14,7 +14,8 @@ html, body
    background-size:cover;
    background-repeat: no-repeat;
    text-shadow: black;
- 
+   width: 100%;
+   font-size: 2rem;
   
 }
 h1{
@@ -25,24 +26,15 @@ h1{
    height: 2.5rem;
    text-align: center;
    color: white;
-   margin-top: 0.625rem;
+
 }
  
 #nav{
-    font-size: 1.5rem;
-    text-shadow: 0rem 0rem;
-    background-color: #703421;
-    border: 0.25rem black;
-    height: 2.5rem;
-    text-align: right;
-    margin: 1rem;
-    text-transform: uppercase;
-    }
+    background-color:#4E1C0C!important;
+}
      
  
 #container{
-   width: 90.625rem;
-   height: 51.25rem;
    background-size: cover;
    background-repeat: no-repeat;
    margin: 0;
@@ -59,173 +51,7 @@ img {
    max-height: 100%;
 }
  
-.portrait {
-   height: 5rem;
-   width: 1.875rem;
-}
- 
-.landscape {
-   height: 1.875rem;
-   width: 5rem;
-}
- 
-.square {
-   height: 4.688rem;
-   width: 4.688rem;
-}
- 
-.tb
-{
-   display: table;
-   width: 100%;
-}
- 
-.td
-{
-   display: table-cell;
-   vertical-align: middle;
-}
- 
-input, button
-{
-   color: #fff;
-   font-family: "Montserrat";
-   padding: 0;
-   margin: 0;
-   border: 0;
-   background-color: transparent;
-}
- 
-#cover
-{
-   position: absolute;
-   top: 50%;
-   left: 0;
-   right: 0;
-   width: 34.375rem;
-   padding: 2.188rem;
-   margin: -5.188rem auto 0 auto;
-   background-color: rgb(255, 0, 0);
-   border-radius: 1.25rem;
-   box-shadow: 0 0.625rem 2.5rem #ed7c7c, 0 0 0 1.25rem #ffffffeb;
-   transform: scale(0.6);
-}
- 
-form
-{
-   height: 6rem;
-}
- 
-input[type="text"]
-{
-   width: 100%;
-   height: 6rem;
-   font-size: 3.438rem;
-   line-height: 1;
-}
-input[type="text"]::placeholder
-{
-   color: white;
-   font-size: 3.125rem; 
-}
- 
-#s-cover
-{
-   width: 0.063rem;
-   padding-left: 2.188rem;
-}
- 
-button
-{ 
-   position: relative;
-   display: block;
-   width: 5.25rem;
-   height: 6rem;
-   cursor: pointer;
-}
- 
-#s-circle
-{
-   position: relative;
-   top: -0.5rem;
-   left: 0;
-   width: 2.688rem;
-   height: 2.688rem;
-   margin-top: 0;
-   border-width: 0.938rem;
-   border: 0.938rem solid #fff;
-   background-color: transparent;
-   border-radius: 50%;
-   transition: 0.5s ease all;
-}
- 
-button span
-{
-   position: absolute;
-   top: 4.25rem;
-   left: 2.688rem;
-   display: block;
-   width: 2.813rem;
-   height: 0.938rem;
-   background-color: transparent;
-   border-radius: 0.625rem;
-   transform: rotateZ(52deg);
-   transition: 0.5s ease all;
-}
- 
-button span:before, button span:after
-{
-   content: '';
-   position: absolute;
-   bottom: 0;
-   right: 0;
-   width: 2.813rem;
-   height: 0.938rem;
-   background-color: #fff;
-   border-radius: 0.625rem;
-   transform: rotateZ(0);
-   transition: 0.5s ease all;
-}
- 
-#s-cover:hover #s-circle
-{
-   top: -0.063rem;
-   width: 4.188rem;
-   height: 0.938rem;
-   border-width: 0;
-   background-color: #fff;
-   border-radius: 20rem;
-}
- 
-#s-cover:hover span
-{
-   top: 50%;
-   left: 3.5rem;
-   width: 1.563rem;
-   margin-top: -0.563rem;
-   transform: rotateZ(0);
-}
- 
-#s-cover:hover button span:before
-{
-   bottom: 0.688rem;
-   transform: rotateZ(52deg);
-}
- 
-#s-cover:hover button span:after
-{
-   bottom: -0.688rem;
-   transform: rotateZ(-52deg);
-}
-#s-cover:hover button span:before, #s-cover:hover button span:after
-{
-   right: -0.688rem;
-   width: 2.5rem;
-   background-color: #fff;
-}
-button span:active{
-   border: black;
-}
+
 #ytd-url {
  display: block;
  position: fixed;
@@ -249,10 +75,48 @@ a {
    color: white;
 }
  
-b{
-   font-weight: 1000;
-   color: white;
-   margin-block-end: 0em;
-   margin-block-start: 0em;
- }
+span{
+    font-weight: 1000;
+    color: white;
+    margin-block-end: 0em;
+    margin-block-start: 0em;
+    filter: saturate(1);
+    text-transform: uppercase;
+    font-size: 2rem!important;
+    margin: 0.5rem;
+    vertical-align: middle;
+    
+    }
 
+#rectangle1{
+    z-index: 0;
+    filter: blur(2px);
+    background-color: rgba(23, 23, 22,0.9); 
+    border-radius: 1rem;
+}
+
+#header12{
+    z-index: 2;
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+}
+
+input{
+    position: fixed;
+    right: 15rem;
+    top: 20rem;
+    z-index: 5;
+    width: 59.8rem;
+    height: 5rem;
+    background-color: rgba(38, 38, 38, 0.8); 
+    border: 0px;
+    color: white;
+    font-size: 2rem!important;
+    text-align: center;
+}
+
+#button{
+    padding: 30px 30px!important;
+    color: inherit!important;
+}

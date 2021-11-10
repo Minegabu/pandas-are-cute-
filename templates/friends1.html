@@ -6,21 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles1.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Data</title>
-    <div id = "nav" class="topnav" style= "position: relative; top:0px">
-      <b>{{ name }} on {{ profile }}</b>
-      <a href="pursedata">Purse and Bank</a>
-      <a href="skilldata">Skills</a>
-      <a href="addfriends">Add Friends</a>
-      <a href="displayfriends">Show Friends</a>
-      <a href="/">Log Out</a>
-  </div>
+    <div id = "nav" class="w3-bar w3-border w3-black">
+      <a href="/" class="w3-bar-item w3-button w3-right">Logout</a>
+      <a href="pursedata" class="w3-bar-item w3-button w3-right">Purse and Bank</a>
+      <a href="skilldata" class="w3-bar-item w3-button w3-right">Skills</a>
+      <a href="addfriends" class="w3-bar-item w3-button w3-right">Add Friends</a>
+      <a href="displayfriends" class="w3-bar-item w3-button w3-right w3-brown">Show Friends</a>
+      <span class="w3-bar-item w3-left">{{ name }} on {{ profile }}</span>
+    </div>
 </head>
 <body> 
   <!-- <div id="player_model"><canvas width="400" height="800" style="width: 200px; height: 400px;" style="background-image: url({{skin}});"></canvas></div> -->
   <!-- <div style = "position: relative; top:40px;">  -->
   </div>
-  <div id="container" style= "position: fixed; right: 40px;">
+  <div id="container" style= "position: fixed; right: 6.25rem; top:4.9rem;">
     <table>
         <tr>
           <th>IGN</th>

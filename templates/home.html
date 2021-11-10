@@ -6,18 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/styles.css">
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <title>Homepage</title>
 </head>
 <body>
-  <h1>Search for players stats on hypixel skyblock!</h1>
+  <div id=header12 style ="position: fixed; right:24rem; top:13rem;">
+  <p>Search for players stats on Hypixel Skyblock</p>
+  </div>
+  <div id = rectangle1 style = "width:60rem;height:18rem;border:1px solid #000; position: fixed; right:15rem; top:13rem;"></div>
     <div id="container"><div>
     <div id="cover">
         <form method="POST" action="/adddata">
           <div class="tb">
             <div class="td">
               <input type="text" name="yess" required placeholder="Enter Username"></div>
-            <div class="td" id="s-cover">
-              <button type="submit">
+              <div class="td" id="s-cover">
+             <div id="button" style="position: fixed; top: 26rem; right: 42rem;"><button class ="w3-button w3-ripple w3-round-xxlarge w3-large w3-green" onclick="myFunction()">Go</button></div>
+             <script>
+              function myFunction() {
+                document.getElementById("button").style.fontWeight = "bold";
+              }
+              </script>
                 <div id="s-circle"></div>
                 <span></span>
               </button>
@@ -25,7 +34,6 @@
           </div>
         </form>
       </div>
-<h2>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
   <ul class=flashes>
@@ -33,7 +41,6 @@
     {{ message }}
         {% endfor %}
   </ul>
-</h2>
 {% endif %}
 {% endwith %}
 {% block body %}{% endblock %}
